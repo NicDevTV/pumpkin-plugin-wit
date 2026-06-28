@@ -2,8 +2,61 @@ package pumpkin:plugin@0.1.0;
 
 interface java-packets {
   use uuid.{ uuid };
+  record config-s-client-information-config {
+    locale: string,
+    view-distance: u8,
+    chat-mode: s32,
+    chat-colors: bool,
+    skin-parts: u8,
+    main-hand: s32,
+    text-filtering: bool,
+    server-listing: bool,
+  }
+  record config-s-config-cookie-response {
+    key: string,
+    has-payload: bool,
+    payload: option<list<u8>>,
+  }
+  record config-s-custom-click-action {
+    action-id: string,
+    payload: option<list<u8>>,
+  }
+  record config-s-keep-alive {
+    keep-alive-id: s64,
+  }
+  record config-s-known-packs {
+    known-pack-count: s32,
+  }
+  record config-s-plugin-message {
+    channel: string,
+    data: list<u8>,
+  }
+  record config-s-config-resource-pack {
+    uuid: uuid,
+    %result: s32,
+  }
+  record login-s-login-cookie-response {
+    key: string,
+    payload: option<list<u8>>,
+  }
+  record login-s-encryption-response {
+    shared-secret: list<u8>,
+    verify-token: list<u8>,
+  }
+  record login-s-login-start {
+    name: string,
+    uuid: uuid,
+  }
+  record login-s-login-plugin-response {
+    message-id: s32,
+    data: option<list<u8>>,
+  }
   record s-attack {
     entity-id: s32,
+  }
+  record s-bundle-item-selected {
+    slot-id: s32,
+    selected-item-index: s32,
   }
   record s-change-game-mode {
     game-mode: string,
@@ -196,8 +249,21 @@ interface java-packets {
     selection-priority: s32,
     placement-priority: s32,
   }
+  record s-set-test-block {
+    position: tuple<s32, s32, s32>,
+    mode: string,
+    message: string,
+  }
   record s-swing-arm {
     hand: s32,
+  }
+  record s-teleport-to-entity {
+    target: uuid,
+  }
+  record s-test-instance-block-action {
+    pos: tuple<s32, s32, s32>,
+    action: string,
+    data: string,
   }
   record s-update-sign {
     location: tuple<s32, s32, s32>,
@@ -221,6 +287,70 @@ interface java-packets {
     inside-block: bool,
     is-against-world-border: bool,
     sequence: s32,
+  }
+  record status-s-status-ping-request {
+    payload: s64,
+  }
+  record config-c-config-add-resource-pack {
+    uuid: uuid,
+    url: string,
+    hash: string,
+    forced: bool,
+    prompt-message: option<string>,
+  }
+  record config-c-config-disconnect {
+    reason: string,
+  }
+  record config-c-cookie-request {
+    key: string,
+  }
+  record config-c-known-packs {
+    known-packs: list<string>,
+  }
+  record config-c-plugin-message {
+    channel: string,
+    data: list<u8>,
+  }
+  record config-c-registry-data {
+    registry-id: string,
+    entries: list<string>,
+  }
+  record config-c-config-server-links {
+    links: list<string>,
+  }
+  record config-c-config-show-dialog {
+    dialog: string,
+  }
+  record config-c-store-cookie {
+    key: string,
+    payload: list<u8>,
+  }
+  record config-c-transfer {
+    host: string,
+    port: s32,
+  }
+  record config-c-update-tags {
+    tags: list<string>,
+  }
+  record login-c-login-cookie-request {
+    key: string,
+  }
+  record login-c-encryption-request {
+    server-id: string,
+    public-key: list<u8>,
+    verify-token: list<u8>,
+    should-authenticate: bool,
+  }
+  record login-c-login-disconnect {
+    json-reason: string,
+  }
+  record login-c-login-plugin-request {
+    message-id: s32,
+    channel: string,
+    data: list<u8>,
+  }
+  record login-c-set-compression {
+    threshold: s32,
   }
   record c-acknowledge-block-change {
     sequence-id: s32,
@@ -371,7 +501,7 @@ interface java-packets {
     z: f64,
     old-diameter: f64,
     new-diameter: f64,
-    speed: string,
+    speed: s64,
     portal-teleport-boundary: s32,
     warning-blocks: s32,
     warning-time: s32,
@@ -420,7 +550,7 @@ interface java-packets {
   }
   record c-multi-block-update {
     chunk-section: s64,
-    updates: list<string>,
+    updates: list<s64>,
   }
   record c-open-screen {
     sync-id: s32,
@@ -513,6 +643,9 @@ interface java-packets {
     player-spawn-info: string,
     data-kept: u8,
   }
+  record c-select-advancements-tab {
+    tab-id: option<string>,
+  }
   record c-play-server-links {
     links: list<string>,
   }
@@ -523,7 +656,7 @@ interface java-packets {
   record c-set-border-lerp-size {
     old-diameter: f64,
     new-diameter: f64,
-    speed: string,
+    speed: s64,
   }
   record c-set-border-size {
     diameter: f64,
@@ -664,6 +797,13 @@ interface java-packets {
     z: s32,
     x: s32,
   }
+  record c-update-advancements {
+    reset: bool,
+    added: list<string>,
+    removed: list<string>,
+    progress: list<string>,
+    show-advancements: bool,
+  }
   record c-update-attributes {
     entity-id: s32,
     properties: list<string>,
@@ -713,8 +853,28 @@ interface java-packets {
     data: s32,
     disable-relative-volume: bool,
   }
+  record status-c-ping-response {
+    payload: s64,
+  }
+  record status-c-status-response {
+    json-response: string,
+  }
   variant serverbound-packet {
+    config-s-acknowledge-finish-config,
+    config-s-client-information-config(config-s-client-information-config),
+    config-s-config-cookie-response(config-s-config-cookie-response),
+    config-s-custom-click-action(config-s-custom-click-action),
+    config-s-keep-alive(config-s-keep-alive),
+    config-s-known-packs(config-s-known-packs),
+    config-s-plugin-message(config-s-plugin-message),
+    config-s-config-resource-pack(config-s-config-resource-pack),
+    login-s-login-cookie-response(login-s-login-cookie-response),
+    login-s-encryption-response(login-s-encryption-response),
+    login-s-login-acknowledged,
+    login-s-login-start(login-s-login-start),
+    login-s-login-plugin-response(login-s-login-plugin-response),
     s-attack(s-attack),
+    s-bundle-item-selected(s-bundle-item-selected),
     s-change-game-mode(s-change-game-mode),
     s-chat-command(s-chat-command),
     s-chat-message(s-chat-message),
@@ -758,13 +918,36 @@ interface java-packets {
     s-set-creative-slot(s-set-creative-slot),
     s-set-held-item(s-set-held-item),
     s-set-jigsaw-block(s-set-jigsaw-block),
+    s-set-test-block(s-set-test-block),
     s-swing-arm(s-swing-arm),
+    s-teleport-to-entity(s-teleport-to-entity),
+    s-test-instance-block-action(s-test-instance-block-action),
     s-update-sign(s-update-sign),
     s-use-item(s-use-item),
     s-use-item-on(s-use-item-on),
+    status-s-status-ping-request(status-s-status-ping-request),
+    status-s-status-request,
     unknown,
   }
   variant clientbound-packet {
+    config-c-config-add-resource-pack(config-c-config-add-resource-pack),
+    config-c-config-clear-dialog,
+    config-c-config-disconnect(config-c-config-disconnect),
+    config-c-cookie-request(config-c-cookie-request),
+    config-c-finish-config,
+    config-c-known-packs(config-c-known-packs),
+    config-c-plugin-message(config-c-plugin-message),
+    config-c-registry-data(config-c-registry-data),
+    config-c-config-server-links(config-c-config-server-links),
+    config-c-config-show-dialog(config-c-config-show-dialog),
+    config-c-store-cookie(config-c-store-cookie),
+    config-c-transfer(config-c-transfer),
+    config-c-update-tags(config-c-update-tags),
+    login-c-login-cookie-request(login-c-login-cookie-request),
+    login-c-encryption-request(login-c-encryption-request),
+    login-c-login-disconnect(login-c-login-disconnect),
+    login-c-login-plugin-request(login-c-login-plugin-request),
+    login-c-set-compression(login-c-set-compression),
     c-acknowledge-block-change(c-acknowledge-block-change),
     c-action-bar(c-action-bar),
     c-award-stats(c-award-stats),
@@ -825,6 +1008,7 @@ interface java-packets {
     c-remove-mob-effect(c-remove-mob-effect),
     c-reset-score(c-reset-score),
     c-respawn(c-respawn),
+    c-select-advancements-tab(c-select-advancements-tab),
     c-play-server-links(c-play-server-links),
     c-set-border-center(c-set-border-center),
     c-set-border-lerp-size(c-set-border-lerp-size),
@@ -858,6 +1042,7 @@ interface java-packets {
     c-ticking-step(c-ticking-step),
     c-transfer(c-transfer),
     c-unload-chunk(c-unload-chunk),
+    c-update-advancements(c-update-advancements),
     c-update-attributes(c-update-attributes),
     c-update-entity-pos(c-update-entity-pos),
     c-update-entity-pos-rot(c-update-entity-pos-rot),
@@ -866,6 +1051,8 @@ interface java-packets {
     c-update-objectives(c-update-objectives),
     c-update-score(c-update-score),
     c-world-event(c-world-event),
+    status-c-ping-response(status-c-ping-response),
+    status-c-status-response(status-c-status-response),
     unknown,
   }
 }
