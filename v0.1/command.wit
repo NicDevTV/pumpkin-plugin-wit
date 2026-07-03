@@ -19,7 +19,26 @@ interface command {
         argument: static func(name: string, %type: argument-type) -> command-node;
         then: func(node: command-node);
         execute-with-handler-id: func(handler-id: u32);
+        suggest-with-handler-id: func(handler-id: u32);
         require-with-handler-id: func(handler-id: u32);
+    }
+
+    record suggestion-request {
+        input: string,
+        cursor: u32,
+        start: u32,
+        remaining: string,
+    }
+
+    record command-suggestion {
+        value: string,
+        tooltip: option<text-component>,
+    }
+
+    record command-suggestions {
+        start: u32,
+        length: u32,
+        values: list<command-suggestion>,
     }
 
     variant argument-type {

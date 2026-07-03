@@ -7,7 +7,7 @@ world plugin {
     use context.{context};
     use event.{event};
     use server.{server as server-instance};
-    use command.{command-sender, consumed-args, command-error};
+    use command.{command-sender, consumed-args, command-error, command-suggestions, suggestion-request};
 
     // --- Host-provided imports ---
 
@@ -62,6 +62,9 @@ world plugin {
 
     /// Dispatches a command execution to the plugin.
     export handle-command: func(command-id: u32, sender: command-sender, server: server-instance, args: consumed-args) -> result<s32, command-error>;
+
+    /// Dispatches a command suggestion request to the plugin.
+    export handle-command-suggestion: func(handler-id: u32, sender: command-sender, server: server-instance, request: suggestion-request) -> command-suggestions;
 
     /// Dispatches a scheduled task execution to the plugin.
     export handle-task: func(handler-id: u32, server: server-instance);
