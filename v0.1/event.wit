@@ -111,6 +111,13 @@ interface event {
         cancelled: bool
     }
 
+    record player-drop-item-event-data {
+        player: player,
+        item-stack: item-stack,
+        drop-full-stack: bool,
+        cancelled: bool
+    }
+
     record player-changed-main-hand-event-data {
         player: player,
         main-hand: hand
@@ -344,6 +351,7 @@ interface event {
         player-respawn-event,
         player-exp-change-event,
         player-item-held-event,
+        player-drop-item-event,
         player-changed-main-hand-event,
         player-gamemode-change-event,
         player-custom-payload-event,
@@ -386,6 +394,7 @@ interface event {
         player-respawn-event(player-respawn-event-data),
         player-exp-change-event(player-exp-change-event-data),
         player-item-held-event(player-item-held-event-data),
+        player-drop-item-event(player-drop-item-event-data),
         player-changed-main-hand-event(player-changed-main-hand-event-data),
         player-gamemode-change-event(player-gamemode-change-event-data),
         player-custom-payload-event(player-custom-payload-event-data),
